@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8" />
+        <meta id="tp_page" name="tp_page" content="domyshop_mobile_home_0.0.1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0,minimal-ui" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta name="apple-mobile-web-app-title" content="无标题文档" />
+        <meta http-equiv="Pragma" content="no-cache">
+        <!-- no baidu siteapp -->
+        <meta http-equiv="Cache-Control" content="no-transform" />
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+        <!-- Tile icon for win8 -->
+        <meta name="msapplication-TileImage" content="" />
+        <meta name="msapplication-TileColor" content="" />
+        <!-- uc browser vertical screen and fullscreen -->
+        <meta name="screen-orientation" content="portrait" />
+        <meta name="full-screen" content="yes" />
+        <!-- qq browser vertical screen and fullscreen -->
+        <meta name="x5-orientation" content="portrait" />
+        <meta name="x5-fullscreen" content="true" />
+        <title>无标题文档</title>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link rel="dns-prefetch" href="" />
+        <!-- favicon -->
+        <link rel="Shortcut Icon" href="" />
+        <!-- Add to homescreen for Chrome on Android -->
+        <link rel="icon" sizes="192x192" href="" />
+        <!-- Add to homescreen for Safari on iOS default 57x57-->
+        <link rel="apple-touch-icon-precomposed" href="" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="" />
+        <link rel="apple-touch-icon-precomposed" sizes="180x180" href="" />
+		<style>
+			video,canvas,.canvasimg,.basedata{width:320px;height:240px;border:1px #000 solid;overflow:hidden;}
+			.sign_file{display:none;}
+			.progress{width:100%;height:24px;overflow:hidden;border:1px #666 solid;margin:5px 0;}
+			.progress span{width:0%;display:block;height:24px;background:red;text-align: center;}
+		</style>
+		<script src="dist/0.0.1/libs/libs.0.0.1.min.js"></script>
+		<script src="fileupload.0.0.1.js"></script>
+		<script>
+			jQuery(function(){
+				jQuery(".fileupload").fileupload({
+					debug: true,
+					complete: function(e){
+						//alert(e.type);
+					},
+					error: function(e){
+						alert(e.type);
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="fileupload"></div>
+	</body>
+</html>
