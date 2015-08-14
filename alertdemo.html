@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			.dialog_alert{border:1px #000 solid;width:200px;height:120px;}
+		</style>
+		<script src="jquery.js"></script>
+	</head>
+	<body>
+		<!-- 以下是结构 -->
+		<script type="text/html" id="dialog_alert_item">
+			<div class="dialog_alert" style="display:none">
+				<div class="dialog_alert_title">title</div>
+				<div class="dialog_alert_context">context</div>
+				<button class="dialog_alert_enter">enter</button>
+			</div>
+		</script>
+
+		<!-- 源码 -->
+		<script>
+			//原有alert
+			alert("test");
+
+			//代替alert
+			window.alert = function(/*context, title, callback, timeout*/){
+				var args = arguments,
+					len = args.length,
+					context = "这只是一个提醒！",
+					title = "提醒",
+					timeout = false,
+					callback = false;
+				if (len == 1){
+					if (jQuery.isPlainObject(args[0])){
+						if ("context" in args[0]) context = args[0]["context"];
+						if ("title" in args[0]) title = args[0]["title"];
+						if ("callback" in args[0]) callback = args[0]["callback"];
+						if ("timeout" in args[0]) timeout = args[0]["timeout"];
+					}else if (typeof args[0] == "string"){
+						context = args[0];
+					}else if (typeof args[0] == "function"){
+						var ops = args[0]();
+						if (ops){
+							if ("context" in ops) context = ops["context"];
+							if ("title" in ops) title = ops["title"];
+							if ("callback" in ops) callback = ops["callback"];
+							if ("timeout" in ops) timeout = ops["timeout"];
+						}
+					}
+				}else if (len == 2){
+					context = args[0];
+					title = args[1];
+				}else if (len >= 3){
+					context = typeof args[0] == "string" && args[0];
+					title = typeof args[1] == "string" && args[1];
+					callback = typeof args[2] == "function" && args[2];
+					timeout = typeof args[2] == "number" && args[3];
+				}
+				var self = this;
+				if (jQuery(".dialog_alert").length > 0 ) jQuery(".dialog_alert").remove();
+				jQuery("body").append((self.alert = jQuery(jQuery("#dialog_alert_item").html())));
+				jQuery.extend(self.alert, {
+					title: self.alert.find(".dialog_alert_title").html(title),
+					context: self.alert.find(".dialog_alert_context").html(context),
+					enter: self.alert.find(".dialog_alert_enter").off("click").on("click", function(e){
+						self.alert.hide().remove();
+						callback && callback.call(this, e, self.alert);
+					})
+				});
+				if (timeout && typeof timeout == "number"){
+					self.alert.timeout && clearTimeout(self.alert.timeout);
+					self.alert.timeout = setTimeout(function(){
+						self.alert.hide().remove();
+					}, timeout);
+				}
+
+				self.alert.show();
+			};
+
+			//demo
+			alert(function() {
+				return {
+					context: "test",
+					title: "title1",
+					callback: function(e) {
+						console.log("alertCallback")
+					}
+				};
+			});
+
+			/* 使用方法
+			1） alert("test");
+			2） alert("test", "title1");
+			3） alert("test", "title1", function(e){
+					console.log("alertCallback")
+				}, 1000);
+			4） alert({
+					context: "test", 
+					title: "title1", 
+					callback: function(e){
+					console.log("alertCallback")
+				}, timeout: 1000});
+			5） alert(function(){
+					return {
+						context: "test", 
+						title: "title1", 
+						callback: function(e){
+							console.log("alertCallback")
+						},
+						timeout: 1000
+					};
+				});*/
+		</script>
+	</body>
+</html>
