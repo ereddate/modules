@@ -19,6 +19,7 @@
 			.page0{background:url(1.jpg) center center no-repeat;}
 			.page1{background:url(2.jpg) center center no-repeat;}
 			.page2{background:url(3.jpg) center center no-repeat;}
+			.on{background:rgb(255,215,0);}
 		</style>
 		<script src="jquery.js"></script>
 		<script>
@@ -30,8 +31,10 @@
 						isMobile = function(){
 							return /iphone|ipad|ipod/.test(ua) || (/android/.test(ua) && /mobile/.test(ua)) || /mobile/.test(ua);
 						},
+						isTouch = 'ontouchstart' in window,
 						time = 500,
-						aniTimeout;
+						aniTimeout,
+						localStorage = win.localStorage;
 
 					var swipeDirection = function(x1, x2, y1, y2) {
 						return Math.abs(x1 - x2) >=
@@ -104,7 +107,7 @@
 
 					var handle = {
 						_initPage:function(target){
-							var pages = target.jq.find(".page_nav").html("").parent().find(".page"),
+							var pages = target.jq.find("."+target.cls.rightNavCls).html("").parent().find("."+target.cls.pageCls),
 								pageLen = pages.length,
 								pageHeight = $(win).height(),
 								pageWidth = $(win).width();
@@ -124,18 +127,24 @@
 									top: pageHeight * i
 								} : {
 									left: pageWidth * i
-								}))).parent().find(".page_nav").append($("<span></span>").addClass('page_nav_choose').off("click").on("click", function(){
+								}))).parent().find("."+target.cls.rightNavCls).append($("<span></span>").addClass(target.cls.rightNavButtonCls).off("click").on("click", function(){
 									target.page = i;
 									target.goPage();
 								})[(!isMobile() ? "show" : "hide")]());
 							});
 
-							$(".prev").hide().off("click").on("click", function(){
+							$("."+target.cls.prevCls).hide().off("click").on("click", function(){
 								target.nextPage();
 							});
-							$(".next").show().off("click").on("click", function(){
+							$("."+target.cls.nextCls).hide().off("click").on("click", function(){
 								target.prevPage();
 							});
+
+							localStorage && target.nocache && localStorage.removeItem(target.cacheName);
+
+							var lPageNum = localStorage && parseFloat(localStorage.getItem(target.cacheName)) || 0;
+
+							handle._buttonShow(target, lPageNum);
 
 							if (target.mousewheel)
 								$(win).mousewheel(function(){
@@ -144,7 +153,7 @@
 									target.nextPage();
 								});
 
-							if (isMobile()){
+							if (isMobile() && isTouch){
 								target.jq.swipe(function(){
 									target.prevPage();
 								}, function(){
@@ -160,7 +169,8 @@
 								});
 							}
 
-							target.goPage(0);
+							localStorage && localStorage.setItem(target.cacheName, lPageNum);
+							target.goPage(lPageNum || 0);
 
 						},
 						_prevPage: function(target) {
@@ -176,26 +186,34 @@
 							}, time);
 						},
 						_go: function(target, type) {
-							var pages = target.jq.find(".page"),
+							var pages = target.jq.find("."+target.cls.pageCls),
 								page = target.page;
 							page = page - type;
 							if (page <= 0) page = 0; else if (page >= target.pages - 1) page = target.pages - 1;
 
 							if (page != target.page){
-								if (page == 0) {
-									$(".prev").hide();
-									$(".next").show();
-								}else if (page == target.pages - 1){
-									$(".prev").show();
-									$(".next").hide();
-								}else {
-									$(".prev,.next").show();
-								}
-								target.page = page;
+								handle._buttonShow(target, page);
 								handle._animate(target, page, type);
 							}
 						},
+						_buttonShow: function(target, page) {
+							if (page == 0) {
+								$("."+target.cls.prevCls).hide();
+								$("."+target.cls.nextCls).show();
+							} else if (page == target.pages - 1) {
+								$("."+target.cls.prevCls).show();
+								$("."+target.cls.nextCls).hide();
+							} else {
+								$("."+target.cls.prevCls+",."+target.cls.nextCls).show();
+							}
+						},
+						_rightNavButtonActive: function(target, page){
+							$("."+target.cls.rightNavCls).find("."+target.cls.rightNavButtonCls).removeClass(target.cls.rightNavButtonActive).eq(page).addClass(target.cls.rightNavButtonActive);
+						},
 						_animate: function(target, page, type){
+							target.page = page;
+							localStorage && localStorage.setItem(target.cacheName, page);
+							handle._rightNavButtonActive(target, page);
 							target.handle[page] && target.handle[page].loading && target.handle[page].loading(page+1);
 							target.jq.animate($.extend({
 								top: 0
@@ -219,6 +237,16 @@
 							this.direction = "leftRight";
 							this.keySwipe = false;
 							this.handle = [];
+							this.nocache = false;
+							this.cls = {
+								prevCls: "prev",
+								nextCls: "next",
+								rightNavCls: "page_nav",
+								rightNavButtonCls: "page_nav_choose",
+								rightNavButtonActive: "on",
+								pageCls: "page"
+							};
+							this.cacheName = "fullpage_pagenum";
 							$.extend(this, ops);
 							handle._initPage(this);
 							var self = this;
@@ -268,6 +296,7 @@
 						mousewheel: true,
 						keySwipe: true,
 						direction: "leftRight",
+						nocache: false,
 						handle: [
 							{
 								loading: function(num) {
