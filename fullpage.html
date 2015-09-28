@@ -107,7 +107,8 @@
 
 					var handle = {
 						_initPage:function(target){
-							var pages = target.jq.find("."+target.cls.rightNavCls).html("").parent().find("."+target.cls.pageCls),
+							var cls = target.cls;
+							var pages = target.jq.find("."+cls.rightNavCls).html("").parent().find("."+cls.pageCls),
 								pageLen = pages.length,
 								pageHeight = $(win).height(),
 								pageWidth = $(win).width();
@@ -127,16 +128,16 @@
 									top: pageHeight * i
 								} : {
 									left: pageWidth * i
-								}))).parent().find("."+target.cls.rightNavCls).append($("<span></span>").addClass(target.cls.rightNavButtonCls).off("click").on("click", function(){
+								}))).parent().find("."+cls.rightNavCls).append($("<span></span>").addClass(cls.rightNavButtonCls).off("click").on("click", function(){
 									target.page = i;
 									target.goPage();
 								})[(!isMobile() ? "show" : "hide")]());
 							});
 
-							$("."+target.cls.prevCls).hide().off("click").on("click", function(){
+							$("."+cls.prevCls).hide().off("click").on("click", function(){
 								target.nextPage();
 							});
-							$("."+target.cls.nextCls).hide().off("click").on("click", function(){
+							$("."+cls.nextCls).hide().off("click").on("click", function(){
 								target.prevPage();
 							});
 
@@ -197,18 +198,20 @@
 							}
 						},
 						_buttonShow: function(target, page) {
+							var cls = target.cls;
 							if (page == 0) {
-								$("."+target.cls.prevCls).hide();
-								$("."+target.cls.nextCls).show();
+								$("."+cls.prevCls).hide();
+								$("."+cls.nextCls).show();
 							} else if (page == target.pages - 1) {
-								$("."+target.cls.prevCls).show();
-								$("."+target.cls.nextCls).hide();
+								$("."+cls.prevCls).show();
+								$("."+cls.nextCls).hide();
 							} else {
-								$("."+target.cls.prevCls+",."+target.cls.nextCls).show();
+								$("."+cls.prevCls+",."+cls.nextCls).show();
 							}
 						},
 						_rightNavButtonActive: function(target, page){
-							$("."+target.cls.rightNavCls).find("."+target.cls.rightNavButtonCls).removeClass(target.cls.rightNavButtonActive).eq(page).addClass(target.cls.rightNavButtonActive);
+							var cls = target.cls;
+							$("."+cls.rightNavCls).find("."+cls.rightNavButtonCls).removeClass(cls.rightNavButtonActive).eq(page).addClass(cls.rightNavButtonActive);
 						},
 						_animate: function(target, page, type){
 							target.page = page;
