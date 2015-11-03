@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0,minimal-ui" />
+		<style>
+			body,canvas{padding:0;margin:0;}
+			body{font-size:16px;}
+			.process_box{margin:0;}
+			.process{padding:0;margin:5px 0 0;text-align:center;overflow:hidden;}
+			canvas{display:inline-block;}
+		</style>
+	</head>
+	<body>
+		<div class="process_box"></div>
+		<script src="jquery.js"></script>
+		<script>
+			var draw = function(ops){
+				return new draw.fn.init(ops);
+			};
+			draw.fn = draw.prototype = {
+				init:function(ops){
+					jQuery.extend(this, {
+						process: 0,
+						cls:{
+							background: 'rgb(221,221,221)',
+							process: 'rgb(231,76,60)',
+							color: 'rgb(231,76,60)'
+						},
+						font:"bold 100% Arial"
+					});
+					if (ops){
+						this.cls.color = ops.cls && ops.cls.color ? ops.cls.color : this.cls.background;
+						jQuery.extend(this, ops);
+					}
+					// 拿到绘图上下文,目前只支持"2d"
+					var context = this.context = this.canvas.getContext('2d');
+					// 将绘图区域清空,如果是第一次在这个画布上画图,画布上没有东西,这步就不需要了
+					context.clearRect(0, 0, this.size, this.size);
+					// 开始画一个灰色的圆
+					context.beginPath(); // 坐标移动到圆心
+					var r = this.radius;
+					context.moveTo(r, r);
+					// 画圆,圆心是24,24,半径24,从角度0开始,画到2PI结束,最后一个参数是方向顺时针还是逆时针
+					context.arc(r, r, r, 0, Math.PI * 2, false);
+					context.closePath();
+					// 填充颜色
+					context.fillStyle = this.cls.background ? this.cls.background : 'rgb(221,221,221)';
+					context.fill();
+					var self = this;
+					self.pval = 0;
+					self.loop = setInterval(function(){
+						self.to.call(self);
+					}, 15);
+					return this;
+				},
+				drawProcess: function(i){
+					var r = this.radius,
+						context = this.context;
+					// 画进度
+					context.beginPath();
+					// 画扇形的时候这步很重要,画笔不在圆心画出来的不是扇形
+					context.moveTo(r, r);
+					// 跟上面的圆唯一的区别在这里,不画满圆,画个扇形
+					context.arc(r, r, r, 0, Math.PI * 2 * i / 100, false);
+					context.closePath();
+					context.fillStyle = this.cls.process ? this.cls.process : 'rgb(231,76,60)';
+					context.fill();
+					// 画内部空白
+					context.beginPath();
+					context.moveTo(r, r);
+					context.arc(r, r, r/2, 0, Math.PI * 2, true);
+					context.closePath();
+					context.fillStyle = 'rgb(255,255,255)';
+					context.fill();
+					//在中间写字
+					context.font = this.font ? this.font : "bold 16px Arial";
+					context.fillStyle = this.cls.color ? this.cls.color : 'rgb(0,0,0)';
+					context.textAlign = 'center';
+					context.textBaseline = 'middle';
+					context.moveTo(r, r);
+					context.fillText(i, r, r);
+				},
+				to: function(){
+					if (this.pval>=this.process){
+						clearInterval(this.loop)
+						return;
+					}
+					this.pval++;
+					this.drawProcess(this.pval);
+				}
+			};
+			draw.fn.init.prototype = draw.fn;
+
+			jQuery.fn.draw = function(options){
+				var self = this,
+					len = options.list.length;
+				function exec(){
+					var i=0,html = [];
+					for (i=0;i<len;i++){
+						html.push('<canvas class="process" width="'+options.size+'px" height="'+options.size+'px"></canvas>');
+					}
+					jQuery(self).append(html.join('')).find(".process").each(function(){
+						draw(jQuery.extend({
+							canvas: jQuery(this)[0],
+							size:options.size,
+							radius: options.size/2-1,
+							font: options.font
+						}, options.list[jQuery(this).index()]));
+					});
+				}
+				exec();
+				var proTimeout;
+				jQuery(window).resize(function() {
+					//fixScreen();
+					var val = jQuery(document).width() / len;
+					jQuery(self).find(".process").remove();
+					if (proTimeout) clearTimeout(proTimeout);
+					proTimeout = setTimeout(function(){
+						options.size = jQuery(document).width()/len;
+						exec();
+					},200);
+				});
+				return this;
+			}
+
+			function fixScreen(){
+				var sw = screen.width;
+				console.log(sw)
+				switch(sw){
+					case 320:
+						break;
+					case 1600:
+						break;
+					case 768:
+						break;
+					case 375:
+						break;
+					case 414:
+						break;
+					case 600:
+						break;
+					case 360:
+						break;
+					case 800:
+						break;
+					case 384:
+						break;
+					case 412:
+						break;
+					case 1440:
+						break;
+					case 1280:
+						break;
+				}
+			}
+
+			jQuery(".process_box").draw({
+				size: jQuery(document).width()/5,
+				list: [{
+					process: 10,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(231,76,60)',
+						color: 'rgb(231,76,60)'
+					},
+				},{
+					process: 20,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(231,76,60)',
+						color: 'rgb(231,76,60)'
+					},
+				}, {
+					process: 30,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(231,76,60)',
+						color: 'rgb(231,76,60)'
+					},
+				}, {
+					process: 40,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(139,0,139)',
+						color: 'rgb(139,0,139)'
+					}
+				}, {
+					process: 50,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(231,76,60)',
+						color: 'rgb(231,76,60)'
+					},
+				},{
+					process: 60,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(139,0,139)',
+						color: 'rgb(139,0,139)'
+					}
+				},{
+					process: 70,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(231,76,60)',
+						color: 'rgb(231,76,60)'
+					},
+				}, {
+					process: 80,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(72,61,139)',
+						color: 'rgb(72,61,139)'
+					}
+				},{
+					process: 90,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(231,76,60)',
+						color: 'rgb(231,76,60)'
+					},
+				}, {
+					process: 100,
+					cls: {
+						background: 'rgb(221,221,221)',
+						process: 'rgb(0,128,0)',
+						color: 'rgb(0,128,0)'
+					}
+				}]
+			});
+			
+		 </script>
+	</body>
+</html>
