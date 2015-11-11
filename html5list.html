@@ -4,11 +4,11 @@
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, minimum-ui">
 		<style>
-			body { font-size: 16px; font-family: 宋体; }
+			body { font-size: 16px; font-family: 宋体; color: rgb(0,0,0); }
 			body, ul, li, p, h1, h2, h3 { padding: 0; margin: 0; list-style: none; }
 			header, nav, section, article { display: block; }
 			a { color: rgb(0, 0, 0); }
-			.main_header h1 { height: 5em; line-height: 5em; text-align: center; background: rgb(0, 0, 139); color: rgb(255, 255, 255); font-size: 1.875em; }
+			.main_header h1 { height: 5em; line-height: 5em; text-align: center; background: rgb(0, 0, 139); color: rgb(255, 255, 255); font-size: 1.875em; text-shadow:0 0.15625em 0.3125em rgba(255,255,255,.5); }
 			.main_header h2 { height: 1.875em; line-height: 1.875em; text-indent: 0.625em; background: rgb(239, 239, 239); color: rgb(0, 0, 0); font-size: 1em; }
 			.main_header p { padding: 0.625em; line-height: 1.67em; font-size: 0.75em; text-indent: 2.083em; }
 			.clearfx { clear: both; display: block; }
@@ -75,7 +75,7 @@
 			span.lf, span.rt { position: absolute; bottom: 0; font-size: 0.75em; color: rgb(169, 169, 169); font-weight: 400; }
 			span.lf { left: 0; }
 			span.rt { right: 0; }
-			.title_fixed { position: fixed; top: 0; left: 0; right: 0; z-index: 99999; }
+			.title_fixed { position: fixed; top: 0; left: 0; right: 0; z-index: 99999;box-shadow:0 0.15625em 0.3125em rgba(51,51,51,.5); }
 			.toup { z-index: 99999; position: fixed; bottom: 0.3125em; right: 0.3125em; width: 2.375em; height: 2.375em; background: rgba(169, 169, 169, .5); line-height: 2.375em; text-align: center; }
 		</style>
 	</head>
@@ -456,58 +456,89 @@
 		<script src="jquery.1.11.3.js"></script>
 		<script>
 			(function(win, $) {
-				var doc = win.document,
-					section = $(".main_item"),
-					header = section.eq(0).find(".main_item_header").height(),
-					go = function() {
-						var href = location.href.split('#');
-						if (href.length > 1) {
-							var index = href[1].replace("page", "");
-							index = parseFloat(index) - 1;
-							if (index < 0) index = 0;
-							$("body").animate({
-								scrollTop: section.eq(index).offset().top
-							}, "slow");
+				var h5list = function(ops) {
+					return new h5list.fn.init(ops);
+				};
+				h5list.fn = h5list.prototype = {
+					init: function(ops) {
+						this.ancher = "page";
+						this.menuItem = "a";
+						$.extend(this, ops);
+						var self = this,
+							selector = self.elem.selector;
+						$(self.ancher).hide();
+						self.section = $(selector + "_item");
+						var header = self.section.eq(0).find(selector + "_item_header").height();
+						$(selector + "_menu " + self.menuItem).click(function(e) {
+							e.preventDefault();
+							var index = $(this).index(),
+								href = location.href.split('#');
+							if (href.length > 1)
+								location.href = href[0] + "#" + self.ancher + (index + 1);
+							else
+								location.href = location.href + "#" + self.ancher + (index + 1);
+							self.toPage();
+						});
+						$(self.top).click(function(e) {
+							e.preventDefault();
+							self.toPage(1);
+						});
+						$(window).scroll(function(e) {
+							var ptop = $(this).scrollTop();
+							if (ptop > $(selector + "_header").height()) {
+								$(self.top).show();
+							} else {
+								$(self.top).hide();
+							}
+							self.section.each(function(i, item) {
+								var ltop = $(this).offset().top,
+									lheight = $(this).height();
+								if (ptop + header > ltop && ptop < ltop + lheight) {
+									$(this).find(selector + "_item_header").addClass(self.fixedCls).parent().find(selector + "_item_context").css({
+										paddingTop: header
+									});
+								} else {
+									$(this).find(selector + "_item_header").removeClass(self.fixedCls).parent().find(selector + "_item_context").css({
+										paddingTop: 0
+									});
+								}
+							});
+						}).scroll();
+						self.toPage();
+						return this;
+					},
+					toPage: function(index) {
+						if(!index || index<0){
+							var href = location.href.split('#');
+							if (href.length > 1) {
+								index = href[1].replace(this.ancher, "");
+								index = parseFloat(index) - 1;
+								if (index < 0) index = 0;
+								index = this.section.eq(index).offset().top;
+							}
 						}
-					};
-				$(".main_menu a").click(function(e) {
-					e.preventDefault();
-					var index = $(this).index(),
-						href = location.href.split('#');
-					if (href.length > 1)
-						location.href = href[0] + "#page" + (index + 1);
-					else
-						location.href = location.href + "#page" + (index + 1);
-					go();
-				});
-				$(".toup").click(function(e) {
-					e.preventDefault();
-					$("body").animate({
-						scrollTop: 1
-					}, "fast");
-				});
-				$(win).scroll(function(e) {
-					var ptop = $(this).scrollTop();
-					if (ptop > $(".main_header").height()) {
-						$(".toup").show();
-					} else {
-						$(".toup").hide();
+						$("body").animate({
+							scrollTop: !index || index < 0 ? 1 : index
+						}, "slow");
 					}
-					section.each(function(i, item) {
-						var ltop = $(this).offset().top,
-							lheight = $(this).height();
-						if (ptop + header > ltop && ptop < ltop + lheight) {
-							$(this).find(".main_item_header").addClass('title_fixed').parent().find(".main_item_context").css({
-								paddingTop: header
-							});
-						} else {
-							$(this).find(".main_item_header").removeClass('title_fixed').parent().find(".main_item_context").css({
-								paddingTop: 0
-							});
-						}
-					});
-				}).scroll();
-				go();
+				};
+				h5list.fn.init.prototype = h5list.fn;
+
+				$.fn.h5list = function(ops) {
+					var self = h5list($.extend(ops, {
+						elem: this
+					}));
+					return {
+						target: self,
+						jq: this
+					};
+				};
+
+				$(".main").h5list({
+					top: ".toup",
+					fixedCls: "title_fixed",
+				});
+				
 			})(this, jQuery);
 		</script>
 	</body>
