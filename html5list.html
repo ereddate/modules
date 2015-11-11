@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, minimum-ui">
+		<style>
+			body { font-size: 16px; font-family: 宋体; }
+			body, ul, li, p, h1, h2, h3 { padding: 0; margin: 0; list-style: none; }
+			header, nav, section, article { display: block; }
+			a { color: rgb(0, 0, 0); }
+			.main_header h1 { height: 5em; line-height: 5em; text-align: center; background: rgb(0, 0, 139); color: rgb(255, 255, 255); font-size: 1.875em; }
+			.main_header h2 { height: 1.875em; line-height: 1.875em; text-indent: 0.625em; background: rgb(239, 239, 239); color: rgb(0, 0, 0); font-size: 1em; }
+			.main_header p { padding: 0.625em; line-height: 1.67em; font-size: 0.75em; text-indent: 2.083em; }
+			.clearfx { clear: both; display: block; }
+			.main_menu { padding: 0 0.625em; text-align: left; }
+			.main_menu a { display: inline-block; padding: 0.625em 0.3125em; margin: 0 0.39em 0.3125em 0.4em; border: 0.0625em solid rgb(0, 0, 0); border-radius: 0.3125em; text-decoration: none; }
+			.main_item { padding: 0 0 0.625em 0; overflow: hidden; }
+			.main_item_header { height: 1.875em; line-height: 1.875em; background: rgb(169, 169, 169); }
+			.main_item_header h1 { text-indent: 0.625em; font-size: 1em; color: rgb(51, 51, 51); }
+			.main_item_context ul li { padding: 0.625em; display: block; clear: both; }
+			.main_item_context ul li img, .main_item_context ul li div { float: left; }
+			.main_item_context img { width: 8.125em; height: 5.9375em; display: inline-block; border: 0.0625em solid rgb(169, 169, 169); }
+			.main_item_context ul li div { margin-left: 0.625em; height: 5.9375em; width: 13.3125em; position: relative; font-weight: 700; }
+			@media (max-width:320px) {
+				.main_menu a { margin: 0 0.7em 0.3125em 0.79em; }
+				.main_item_context ul li div { width: 9.375em; }
+			}
+			@media (min-width:321px) and (max-width:360px) {
+				.main_menu a { margin: 0 .2em 0.3125em .3em; }
+				.main_item_context ul li div { width: 12.1875em; }
+			}
+			@media (min-width:361px) and (max-width:375px) {
+				.main_menu a { margin: 0 0.39em 0.3125em 0.4em; }
+				.main_item_context ul li div { width: 13.3125em; }
+			}
+			@media (min-width:376px) and (max-width:384px) {
+				.main_menu a { margin: 0 .4em 0.3125em .5em; }
+				.main_item_context ul li div { width: 13.75em; }
+			}
+			@media (min-width:385px) and (max-width:412px) {
+				.main_menu a { margin: 0 .6em 0.3125em .7em; }
+				.main_item_context ul li div { width: 15.625em; }
+			}
+			@media (min-width:413px) and (max-width:414px) {
+				.main_menu a { margin: 0 .7em 0.3125em .7em; }
+				.main_item_context ul li div { width: 15.625em; }
+			}
+			@media (min-width:415px) and (max-width:600px) {
+				.main_menu a { margin: 0 2em 0.3125em 2em; }
+				.main_item_context ul li div { width: 27.1875em; }
+			}
+			@media (min-width:601px) and (max-width:768px) {
+				.main_menu a { margin: 0 3.3em 0.3125em 3.3em; }
+				.main_item_context ul li div { width: 37.8125em; }
+			}
+			@media (min-width:769px) and (max-width:800px) {
+				.main_menu a { margin: 0 0.64em 0.3125em 0.7em; }
+				.main_item_context ul li div { width: 39.6875em; }
+			}
+			@media (min-width:801px) and (max-width:1280px) {
+				.main_menu { text-align: center; }
+				.main_menu a { margin: 0 0.64em 0.3125em 0.7em; }
+				.main_item_context ul li div { width: 68.75em; }
+			}
+			@media (min-width:1281px) and (max-width:1440px) {
+				.main_menu { text-align: center; }
+				.main_menu a { margin: 0 0.64em 0.3125em 0.7em; }
+				.main_item_context ul li div { width: 78.75em; }
+			}
+			@media (min-width:1441px) and (max-width:1600px) {
+				.main_menu { text-align: center; }
+				.main_menu a { margin: 0 0.64em 0.3125em 0.7em; }
+				.main_item_context ul li div { width: 89.6875em; }
+			}
+			span.lf, span.rt { position: absolute; bottom: 0; font-size: 0.75em; color: rgb(169, 169, 169); font-weight: 400; }
+			span.lf { left: 0; }
+			span.rt { right: 0; }
+			.title_fixed { position: fixed; top: 0; left: 0; right: 0; z-index: 99999; }
+			.toup { z-index: 99999; position: fixed; bottom: 0.3125em; right: 0.3125em; width: 2.375em; height: 2.375em; background: rgba(169, 169, 169, .5); line-height: 2.375em; text-align: center; }
+		</style>
+	</head>
+	<body>
+		<a href="" class="toup">top</a>
+		<div class="main">
+			<header class="main_header">
+				<h1>banner</h1>
+				<h2>title</h2>
+				<p>102岁抗战老兵遗体火化 曾经参加长沙会战。102岁抗战老兵遗体火化 曾经参加长沙会战</p>
+			</header>
+			<nav class="main_menu clearfx">
+				<a href="">频道测试</a><a href="">频道测试</a><a href="">频道测试</a><a href="">频道测试</a><a href="">频道测试</a><a href="">频道测试</a><a href="">频道测试</a><a href="">频道测试</a>
+			</nav>
+			<section>
+				<ul>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>1/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>2/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>3/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>4/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>5/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>6/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>7/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+					<li>
+						<article class="main_item clearfx">
+							<header class="main_item_header">
+								<h1>8/8 title</h1>
+							</header>
+							<div class="main_item_context">
+								<ul>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+									<li>
+										<a href=""><img src="" alt="img" />
+										<div>中国中国中国中国，中国中国中国中国中国中国中国。
+											<p><span class="lf">和讯</span><span class="rt">2015-12-01</span></p>
+										</div></a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+				</ul>
+			</section>
+		</div>
+		<script src="jquery.1.11.3.js"></script>
+		<script>
+			(function(win, $) {
+				var doc = win.document,
+					section = $(".main_item"),
+					header = section.eq(0).find(".main_item_header").height(),
+					go = function() {
+						var href = location.href.split('#');
+						if (href.length > 1) {
+							var index = href[1].replace("page", "");
+							index = parseFloat(index) - 1;
+							if (index < 0) index = 0;
+							$("body").animate({
+								scrollTop: section.eq(index).offset().top
+							}, "slow");
+						}
+					};
+				$(".main_menu a").click(function(e) {
+					e.preventDefault();
+					var index = $(this).index(),
+						href = location.href.split('#');
+					if (href.length > 1)
+						location.href = href[0] + "#page" + (index + 1);
+					else
+						location.href = location.href + "#page" + (index + 1);
+					go();
+				});
+				$(".toup").click(function(e) {
+					e.preventDefault();
+					$("body").animate({
+						scrollTop: 1
+					}, "fast");
+				});
+				$(win).scroll(function(e) {
+					var ptop = $(this).scrollTop();
+					if (ptop > $(".main_header").height()) {
+						$(".toup").show();
+					} else {
+						$(".toup").hide();
+					}
+					section.each(function(i, item) {
+						var ltop = $(this).offset().top,
+							lheight = $(this).height();
+						if (ptop + header > ltop && ptop < ltop + lheight) {
+							$(this).find(".main_item_header").addClass('title_fixed').parent().find(".main_item_context").css({
+								paddingTop: header
+							});
+						} else {
+							$(this).find(".main_item_header").removeClass('title_fixed').parent().find(".main_item_context").css({
+								paddingTop: 0
+							});
+						}
+					});
+				}).scroll();
+				go();
+			})(this, jQuery);
+		</script>
+	</body>
+</html>
