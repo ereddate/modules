@@ -24,11 +24,6 @@
 					}
 				});
 				win.pReact = $;
-				function r(a) {
-					var b = "length" in a && a.length,
-						c = (typeof a).toLowerCase();
-					return "array" === c || 0 === b || "number" == typeof b && b > 0 && b - 1 in a
-				}
 				var map = {
 					findDom: function(a, obj){
 						map.each(a.children, function(i, elem){
@@ -70,6 +65,11 @@
 						ceval(html);
 					},
 					each: function(obj, callback) {
+						function r(a) {
+							var b = "length" in a && a.length,
+								c = (typeof a).toLowerCase();
+							return "array" === c || 0 === b || "number" == typeof b && b > 0 && b - 1 in a
+						}
 						if (r(obj)) {
 							var len = obj.length,
 								i;
