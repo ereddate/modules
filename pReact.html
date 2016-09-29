@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<title>pReact Demo</title>
 	</head>
 	<body>
 		<div id="main"></div>
@@ -17,7 +18,7 @@
 					renderDom: function(html, data, parent){
 						var result = map.tmpl(typeof html == "string" ? html : html.render(), data);
 						if (typeof html == "string"){
-							parent.innerHTML = result;
+							parent.innerHTML = parent.innerHTML+result;
 						}else{
 							parent.appendChild(map.renderHandle(result, html));
 						}
@@ -142,39 +143,78 @@
 			});
 		</script>
 		<script type="text/pReact">
-			var AddNum = pReact.createClass({
-				num: 0,
-				handleClick: function(){
-					this.num=0;
-					document.getElementById("num").innerHTML = this.num;
-				},
-				handleClickA: function(){
-					this.num+=1;
-					document.getElementById("num").innerHTML = this.num;
-				},
-				render: function(){
-					var a = "view",
-						cE = "增 加",
-						cQ = "取 消";
-					return (
-						<style>
-							body{padding:0;margin:0;font-size: 14px;text-align: center;}
-							.view{margin:0 10px;}
-							.view a{border:1px solid rgb(165,42,42);border-radius: 10px;padding:5px;text-decoration: none;margin:0 5px 0;}
-							.view span{vertical-align: middle;margin:0 5px 0;}
-							.view .bignum{color:red;font-size:20px;font-weight: 700;}
-							a{color:rgb(165,42,42);}
-							a:hover{color:rgb(0,0,255);font-size: 14px;}
-						</style>
-						<div class="view"><p class="a" title="{{ title }}"><span>{{ date }}, {{ $a }} {{ name }}</span><span id="num" class="bignum">{{ num }}</span></p></div>
-						<div class="view"><a href="javascript:;" onClick="{{ this.handleClickA }}">{{ $cE }}</a><a href="javascript:;" onClick="{{ this.handleClick }}">{{ $cQ }}</a></div>
-					);
-				}
-			});
-			pReact.renderDom(
-				<AddNum {name:'的 num 等于',title:'test', date:(new Date()).getFullYear(), num:0} />, 
-				document.getElementById('main')
-			);
+			(function(win){
+				var AddNum = pReact.createClass({
+					num: 0,
+					handleClick: function(){
+						this.num=0;
+						document.getElementById("num").innerHTML = this.num;
+					},
+					handleClickA: function(){
+						this.num+=1;
+						document.getElementById("num").innerHTML = this.num;
+					},
+					handleClickB: function(){
+						this.num-=1;
+						this.num<0 && (this.num = 0);
+						document.getElementById("num").innerHTML = this.num;
+					},
+					render: function(){
+						var a = "view",
+							cE = "增 加",
+							cD = "减 少",
+							cQ = "清 零";
+						return (
+							<style>
+								body{padding:0;margin:0;font-size: 14px;text-align: center;}
+								.view{margin:10px;}
+								.view a{border:1px solid rgb(165,42,42);border-radius: 10px;padding:5px;text-decoration: none;margin:0 5px 0;}
+								.view span{vertical-align: middle;margin:0 5px 0;}
+								.view .bignum{color:red;font-size:20px;font-weight: 700;}
+								a{color:rgb(165,42,42);}
+								a:hover{color:rgb(0,0,255);font-size: 14px;}
+							</style>
+							<div class="view"><p class="a" title="{{ title }}"><span>{{ date }}, {{ $a }} {{ name }}</span><span id="num" class="bignum">{{ num }}</span></p><a href="javascript:;" onClick="{{ this.handleClickA }}">{{ $cE }}</a><a href="javascript:;" onClick="{{ this.handleClickB }}">{{ $cD }}</a><a href="javascript:;" onClick="{{ this.handleClick }}">{{ $cQ }}</a></div>
+						);
+					}
+				});
+				pReact.renderDom(
+					<AddNum {name:'的 num 等于', title:'test', date:(new Date()).getFullYear(), num:0} />, 
+					document.getElementById('main')
+				);
+			})(this)
+		</script>
+		<script type="text/pReact">
+			(function(win){
+				var newForm = pReact.createClass({
+					handleSubmit: function(e){
+						e.peventDefault();
+						document.getElementById("test").onsubmit();
+					},
+					render: function(){
+						var cQ = "提 交";
+						return (
+							<style>
+								input,button{display:block;margin:10px 0;}
+								.clearFx{clear:both;overflow:hidden;position: relative;}
+								.form{margin:10px auto;text-align: center;width:300px;}
+								.submit_button{padding:5px;border:0;border-radius: 5px;}
+							</style>
+							<div class="form clearFx">
+								<form id="test" action="" onSubmit="{{ this.handleSubmit }}">
+									<input type="text" name="name" placeholder="{{ nameValue }}" value="" />
+									<input type="password" name="password" placeholder="{{ passwordValue }}" value="" />
+									<button type="submit" class="submit_button">{{ $cQ }}</button>
+								</form>
+							</div>
+						)
+					}
+				});
+				pReact.renderDom(
+					<newForm {nameValue: "请输入...", passwordValue:"请输入..."} />,
+					document.getElementById("main")
+				);
+			})(this)
 		</script>
 	</body>
 </html>
