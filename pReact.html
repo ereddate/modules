@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<div id="a"></div>
+		<div id="main"></div>
 		<script>
 			(function(win, $, ceval) {
 				var doc = win.document;
@@ -52,11 +52,14 @@
 					},
 					render: function(html, dom){
 						html = html.replace(/\s{2,}/gi, "").replace(/[\r|\n|\r\n]*/gi, "");
-						var result = /render\s*\:\s*function\(\)\{\s*return\s*\(\s*(.+)\s*\);*\s*\}\}\);*/.exec(html);
+						var result = /render\s*\:\s*function\(\)\{\s*.*\s*return\s*\(\s*(.+)\s*\);*\s*\}\}\);*/.exec(html);
 						if (result && result[1]){
 							var exp = "\'"+result[1].replace(/\'/gi, "\\\'").replace(/\"/gi, "\\\"")+"\'";
 							html = html.replace(result[1], exp);
 						}
+						html = html.replace(/\{\{\s*\$([^\}\s*]+)\s*\}\}/gi, function(a,b){
+							return "\'+"+b+"+\'"
+						});
 						result = /\.renderDom\s*\(\s*\<\s*(.+)\/\>/.exec(html);
 						if (result){
 							var k = result[1].split(' ');
@@ -139,23 +142,38 @@
 			});
 		</script>
 		<script type="text/pReact">
-			var a = pReact.createClass({
+			var AddNum = pReact.createClass({
+				num: 0,
 				handleClick: function(){
-					console.log("a");
+					this.num=0;
+					document.getElementById("num").innerHTML = this.num;
 				},
 				handleClickA: function(){
-					console.log("b");
+					this.num+=1;
+					document.getElementById("num").innerHTML = this.num;
 				},
 				render: function(){
+					var a = "view",
+						cE = "增 加",
+						cQ = "取 消";
 					return (
-						<div><p class="a" title="{{ title }}" onClick="{{ this.handleClick }}"> a {{ name }}</p></div>
-						<div><a href="javascript:;" onClick="{{ this.handleClickA }}">{{ date }}</a></div>
+						<style>
+							body{padding:0;margin:0;font-size: 14px;text-align: center;}
+							.view{margin:0 10px;}
+							.view a{border:1px solid rgb(165,42,42);border-radius: 10px;padding:5px;text-decoration: none;margin:0 5px 0;}
+							.view span{vertical-align: middle;margin:0 5px 0;}
+							.view .bignum{color:red;font-size:20px;font-weight: 700;}
+							a{color:rgb(165,42,42);}
+							a:hover{color:rgb(0,0,255);font-size: 14px;}
+						</style>
+						<div class="view"><p class="a" title="{{ title }}"><span>{{ date }}, {{ $a }} {{ name }}</span><span id="num" class="bignum">{{ num }}</span></p></div>
+						<div class="view"><a href="javascript:;" onClick="{{ this.handleClickA }}">{{ $cE }}</a><a href="javascript:;" onClick="{{ this.handleClick }}">{{ $cQ }}</a></div>
 					);
 				}
 			});
 			pReact.renderDom(
-				<a {name:'to b',title:'test', date:(new Date())}/>, 
-				document.getElementById('a')
+				<AddNum {name:'的 num 等于',title:'test', date:(new Date()).getFullYear(), num:0} />, 
+				document.getElementById('main')
 			);
 		</script>
 	</body>
