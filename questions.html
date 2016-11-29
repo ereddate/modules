@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>考题</title>
+		<style>
+			body,ul, li{padding:0;margin:0;list-style: none;font-size: 20px;}
+			label{display:inline-block;}
+			#main{margin:10px 30px;text-align: center;}
+			#questions{text-align: left;}
+			#main ul li{padding:10px 0;}
+			#main ul li label{width:100px;font-weight: 700;}
+			#main ul li input{width:100px;font-size:30px;text-align: center;}
+			#submit{font-size:30px;margin:20px 0;}
+			.error{border:2px red solid;}
+		</style>
+	</head>
+	<body>
+		<div id="main">
+			<div id="questions"></div>
+			<button id="submit">完 成</button><span id="result"></span>
+		</div>
+		<script>
+			(function(win){
+				var doc = win.document,
+					dom = doc.getElementById("questions"),
+					submit = doc.getElementById("submit"),
+					result = doc.getElementById("result");
+				var map = function(ops){
+					return new map.fn.init(ops);
+				};
+				map.getReg = function(type,prv){
+					var a = type[parseInt(Math.floor(type.length * Math.random()))];
+					if (prv == a) a = map.getReg(type, prv);
+					return a;
+				};
+				map.getArr = function(type, from, to){
+					var i, len = parseInt(Math.floor(type.length * Math.random())), arr = [],prv = map.getReg(type);
+					for (i=0;i<len;i++){
+						var a = map.getReg(type, prv);
+						var b = parseInt(Math.floor(to * Math.random(from)+1));
+						arr.push((i>0 ? a : "")+""+b);
+						prv = a;
+					}
+					if (arr.length === 2){
+						if (/-/.test(arr[1])){
+							arr[0] = parseInt(Math.floor(100 * Math.random()+1));
+							arr[1] = parseInt(Math.floor(100 * Math.random()+1));
+							arr.reverse();
+							arr[1] = "-"+arr[1];
+						}else if (/\+/.test(arr[1])){
+							arr[0] = parseInt(Math.floor(100 * Math.random()+1));
+							arr[1] = parseInt(Math.floor(100 * Math.random()+1));
+							arr[1] = "+"+arr[1];
+						}else if (/\//.test(arr[1])){
+							arr[0] = parseInt(Math.floor(81 * Math.random(9)+1));
+							arr[1] = parseInt(Math.floor(9 * Math.random()+1));
+							arr.reverse();
+							arr[1] = "/"+arr[1];
+						}
+					}
+					if (arr.length < 2 || (new Function("return ("+arr.join('')+")"))() > 100 || (new Function("return ("+arr.join('')+")"))() < 0 || /\./.test((new Function("return ("+arr.join('')+")"))()+"")){
+						arr = map.getArr(type, from, to);
+					}
+					return arr;
+				};
+				map.fn = map.prototype = {
+					init:function(ops){
+						for (name in ops) this[name] = ops[name];
+						return this;
+					},
+					done: function(callback){
+						var c, clen = this.count, carr = [];
+						for (c=0;c<clen;c++){
+							var arr = map.getArr(this.type, this.form, this.to);
+							arr.push(' = </label><input type="text" value="" out="'+(new Function("return ("+arr.join('')+");")())+'" /></li>');
+							arr.splice(0,0,"<li><label>")
+							carr.push(arr.join(''));
+						}
+						dom.innerHTML = "<ul>"+carr.join('').replace(/\*/gi, "×").replace(/[0-9]+(\/)[0-9]+/gi, function(a, b){
+							a = a.replace(b, "÷");
+							return a;
+						})+"</ul>";
+						callback && callback();
+					}
+				};
+				map.fn.init.prototype = map.fn;
+
+				map({
+					count: 60,
+					from: 1,
+					to: 9,
+					type: ["+", "-", "/", "*"]
+				}).done(function(){
+					submit.onclick = function(e){
+						e.preventDefault();
+						var inputs = dom.getElementsByTagName("input"),
+							success = 0,error = 0;
+						result.innerHTML ="";
+						for (i=0;i<inputs.length;i++){
+							if (parseInt(inputs[i].value) != parseInt(inputs[i].getAttribute("out"))){
+								inputs[i].setAttribute("class","error");
+								error++;
+							}else{
+								inputs[i].setAttribute("class" , "");
+								success++;
+							}
+						}
+						result.innerHTML = "正确："+success+",错误："+error+"!"
+					}
+				});
+			})(this);
+		</script>
+	</body>
+</html>
