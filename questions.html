@@ -8,6 +8,7 @@
 		<style>
 			html,body{font-size:16px;width:100%;height:100%;overflow:hidden;}
 			body,ul, li{padding:0;margin:0;list-style: none;font-size: 1rem;}
+			body{overflow:scroll;overflow-x:hidden;padding:0 0 25px 0;}
 			label{display:inline-block;}
 			#main{margin:10px 0;height:100%;position:relative;}
 			#questions{text-align: center;position:absolute;top:0;left:0;}
@@ -17,7 +18,7 @@
 			#main ul li input{width:6.25rem;font-size:2rem;text-align: center;}
 			.submit{font-size:1rem;margin:20px 0;}
 			.error{border:2px red solid;}
-			.hulue{border:2px rgb(124,252,0) solid;}
+			.hulue{border:2px rgb(0,128,0) solid;}
 			i{display:block;}
 		</style>
 	</head>
@@ -86,7 +87,7 @@
 						var c, clen = this.count, carr = [];
 						for (c=0;c<clen;c++){
 							var arr = map.getArr(this.type, this.form, this.to);
-							arr.push(' = </label><input type="text" value="" out="'+(new Function("return ("+arr.join('')+");")())+'" /></span>'+(c+1 >= clen ? '<button class="submit qprv">上一题</button> <button id="submit" class="submit">完 成</button><i id="result"></i>' :(c>0 ? '<button class="submit qprv">上一题</button> ':'')+'<button class="submit qsubmit">下一题</button> <button class="submit qcancel">忽 略</button>')+'</li>');
+							arr.push(' = </label><input type="text" value="" out="'+(new Function("return ("+arr.join('')+");")())+'" /></span>'+(c+1 >= clen ? '<button class="submit qprv">上一题</button> <button id="submit" class="submit">完 成</button><i id="result" style="padding: 5px 5px 50px 5px;"></i>' :(c>0 ? '<button class="submit qprv">上一题</button> ':'')+'<button class="submit qsubmit">下一题</button> <button class="submit qcancel">忽 略</button>')+'</li>');
 							arr.splice(0,0,"<li><span><label>")
 							carr.push(arr.join(''));
 						}
@@ -121,9 +122,9 @@
 								input.setAttribute("class","error");
 							}else{
 								input.setAttribute("class" , "");
-								this.parentNode.style.display = "none";
-								this.parentNode.nextSibling.style.display = "block";
 							}
+							this.parentNode.style.display = "none";
+							this.parentNode.nextSibling.style.display = "block";
 						};
 					});
 					var qprv = doc.querySelectorAll(".qprv");
@@ -152,21 +153,24 @@
 					submit.onclick = function(e){
 						e.preventDefault();
 						var inputs = dom.getElementsByTagName("input"),
-							success = 0,error = 0,hulue =0;
+							success = 0,error = 0,hulue =0, arr = [];
 						result.innerHTML ="";
 						for (i=0;i<inputs.length;i++){
 							if (inputs[i].getAttribute("hulue") === "1"){
 								inputs[i].setAttribute("class" , "hulue");
 								hulue++;
+								arr.push("<i style='color:rgb(0,128,0);display:block;'>"+inputs[i].previousSibling.innerHTML+inputs[i].value+"</i>");
 							} else if (parseInt(inputs[i].value) != parseInt(inputs[i].getAttribute("out"))){
 								inputs[i].setAttribute("class","error");
 								error++;
+								arr.push("<i style='color:red;display:block;'>"+inputs[i].previousSibling.innerHTML+inputs[i].value+"</i>");
 							}else {
 								inputs[i].setAttribute("class" , "");
 								success++;
+								arr.push("<i style='display:block;'>"+inputs[i].previousSibling.innerHTML+inputs[i].value+"</i>");
 							}
 						}
-						result.innerHTML = "忽略："+hulue+",正确："+success+",错误："+error+"!"
+						result.innerHTML = "忽略："+hulue+",正确："+success+",错误："+error+"!<i style='overflow:scroll;overflow-x:hidden;height:"+(300/16)+"rem;text-align:left;margin:0 10px;display:block;background:#efefef;padding:5px 5px 25px 5px;'><h1>成绩单</h1>"+arr.join('')+"</i>"
 					}
 				});
 			})(this);
