@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<div class="dom">
+			<span>
+				<a href="{{b}}">test {{a}}</a>
+			</span>
+		</div>
+		<script>
+			(function(win){
+				var dir = function(elem, filter) {
+					var matched = [];
+					while ((elem = elem[filter]) && elem.nodeType !== 9) {
+						//console.log(elem);
+						if (elem.nodeType === 1) {
+							matched.push(elem);
+						}else if (typeof elem.length != "undefined"){
+							for (var i =0;i<elem.length;i++) {
+								matched.push(elem[i]);
+								var a = dir(elem[i], filter);
+								if (a.length>0){
+									matched = matched.concat(a);
+								}
+							}
+						}
+					}
+					return matched;
+				},
+				query = function(a, b){
+					var c = b && b.querySelectorAll(a) || document.querySelectorAll(a);
+					return c ? [].slice.call(c) : c;
+				},
+				tmpl = function(a, b){
+					for (var i in b){
+						a = a.replace(new RegExp("{{\\s*"+i+"\\s*}}", "gim"), function(c, d){
+							c = b[i];
+							return c;
+						});
+					}
+					return a;
+				},
+				findNode = function(s){
+					var a = typeof s.nodeType != "undefined" ? s : query(s)[0],
+						b = [],
+						c = dir(a, "childNodes");
+					b.push(a);
+					b = b.concat(c);
+					console.log(b)
+					a.vnode = b;
+					for (var i =0;i<b.length;i++){
+						var elem = b[i];
+						switch(elem.nodeType){
+							case 1:
+								var attr = elem.attributes;
+								for (var x=0;x<attr.length;x++){
+									var n = attr[x].name,
+										v = attr[x].value;
+									//elem[n] = tmpl(v, data);
+									elem.attrTemplate = {
+										[n]:v
+									};
+								}
+								break;
+							case 3:
+								elem.textTemplate = {
+									textContent: elem.textContent
+								};
+								//elem.textContent = tmpl(elem.textContent, data);
+								break;
+						}
+					}
+					return b;
+				},
+				render = function(s, data, p, callback){
+					if (typeof p != "undefined"){
+						var d = query(s)[0].cloneNode(true);
+						var a = findNode(d);
+						for (var i=0;i<a.length;i++){
+							var elem = a[i];
+							switch(elem.nodeType){
+								case 1:
+									for (var x in elem.attrTemplate){
+										elem[x] = tmpl(elem.attrTemplate[x], data);
+									}
+									break;
+								case 3:
+									for (var x in elem.textTemplate){
+										elem[x] = tmpl(elem.textTemplate[x], data);
+									}
+									break;
+							}
+						}
+						query(p)[0].appendChild(d);
+					}
+
+					callback && callback();
+				};
+
+				var data = {
+					a: 1,
+					b: "#"
+				};
+				render(".dom", data, "body", function(){
+					console.log("end")
+				});
+				render(".dom", data, "body", function(){
+					console.log("end")
+				});
+
+			})(window);
+		</script>
+	</body>
+</html>
